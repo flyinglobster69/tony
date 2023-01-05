@@ -1,0 +1,4 @@
+Alpha 0.9
+
+The beginning
+- Bot statically responds to a command (test)

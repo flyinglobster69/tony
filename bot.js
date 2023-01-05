@@ -1,60 +1,61 @@
-// TonyAI#8903
+// TonyAI
 // 1.0: November 18, 2022
-// Author: FlyingLobster69#1861 (LooOOooL YT)
+// Author: Arthur Jin
 
 
-// Tony is an AI quote generator. It reads the chat and learns English
-// using an algorithm which logically sorts words into categories. The
-// quote generation function uses the collected data to generate quotes.
+// TonyAI is an AI quote generator. It reads the chat and learns English
+// using a custom algorithm that logically sorts words into categories.
+// The quote generation function uses the collected data to generate 
+// quotes.
 
-// In the beginning, the generator would generate quotes randomly, but
-// it is planned to be able to generate quotes within parameters.
+// In the beginning, the generator would generate quotes randomly, but 
+// it is planned to be able to generate quotes within parameters. 
+// (with certain targeted topics or emotions)
 
 
 // Import statements
-const { Client, Events, GatewayIntentBits, MessageEmbed } = require('discord.js')
+const { GatewayIntentBits } = require('discord.js')
+const Discord = require('discord.js')
 const fs = require('fs')
 const { exitCode } = require('process')
 
-
-// Connect configuration files
+// Connect Config file 
 const config = require('./config.json')
-const version = require('./version.json')
+
+//  -- Command list goes here later --
 
 
-// Connect client
-const client = new Client({ intents: [GatewayIntentBits.Guilds]})
 
+// Connect Client
+const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, 
+    Discord.Intents.FLAGS.GUILD_MEMBERS, 
+    Discord.Intents.FLAGS.GUILD_MESSAGES
+]}
+) // Specify intents
 
-// Gets called when our bot is successfully logged in and connected
+// Gets called when TonyAI is successfully logged on and connected
 client.on('ready', () => {
-    console.log(`${client.user.tag} is connected on Version ${version.version}`)
+    console.log(`${client.user.tag} is connected on Version ${config.version}`)
 
-    client.user.setActivity('yaHOOO') // Activity status on Discord
+    client.user.setActivity('with English') // Activity status on Discord
 })
 
-
-// Commands
-client.on(Events.InteractionCreate, interaction => {
-	console.log(interaction)
+client.on('messageCreate', message => {
+    if (message.author = client.user) {
+        return // prevent bot from responding to own messages
+    }
+    if (message.content.toLowerCase() == 'test') {
+        console.log('command activated')
+        message.channel.send('Passed')
+    }
+    
+    else {
+        null //
+    }
 })
 
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-
-	const command = interaction.client.commands.get(interaction.commandName);
-
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
-	}
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-	}
+process.on('unhandledRejection', (reason, promise) => {
+    console.log('no perms')
 })
 
 client.login(config.token)
