@@ -14,7 +14,6 @@
 
 
 // Import statements
-const { GatewayIntentBits } = require('discord.js')
 const Discord = require('discord.js')
 const fs = require('fs')
 const { exitCode } = require('process')
@@ -24,7 +23,11 @@ const config = require('./config.json')
 
 //  -- Command list goes here later --
 
-
+// Parts of speech word lists
+// const pronouns = ['i', 'you', 'he', 'she', 'him', 'her', 'it', 'them', 'ours']
+// const conjunctions = ['and', 'but', 'or', 'so', 'yet', 'with']
+// const articles = ['a', 'an', 'the']
+// const interjections = ['ah', 'oop', 'oops', 'wow']
 
 // Connect Client
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, 
@@ -41,11 +44,12 @@ client.on('ready', () => {
 })
 
 client.on('messageCreate', message => {
+    console.log('Message Detected')
     if (message.author = client.user) {
         return // prevent bot from responding to own messages
     }
     if (message.content.toLowerCase() == 'test') {
-        console.log('command activated')
+        console.log('Command Activated')
         message.channel.send('Passed')
     }
     
@@ -53,6 +57,61 @@ client.on('messageCreate', message => {
         null //
     }
 })
+
+// Function for machine learning
+// Parts of speech categories
+// - Nouns          - person, place or thing                        - [object]
+// - Pronouns       - stands for nouns                              - I, you, he, she, him, her, it, them, ours
+// - Verbs          - action or state of being                      - [action]
+// - Adjectives     - modifies noun                                 - [description]
+// - Adverbs        - describes verbs, adjectives, other adverbs    - ends in -ly
+// - Prepositions   - shows relationship between ideas/objects      - [location, direction, time]
+// - Conjunctions   - joins words                                   - and, but, or, so, yet, with
+// - Articles       - specify nouns                                 - a, an, the
+// - Interjections  - expressions                                   - ah, oop, oops, wow
+
+// Lists that can be created
+// - Pronouns
+// - Conjunctions
+// - Articles
+// - Interjections
+
+// Parts that need to be learned (basic structures)
+// - Nouns          - Comes before a verb; Comes after adjectives
+// - Verbs          - Comes after a noun
+// - Adjectives     - Comes before a Noun/Pronoun; Comes after a linking verb
+// - Adverbs        - ends in -ly
+// - Prepositions   - Comes before a Noun/Pronoun
+
+// Basic sentence structure
+// "The quick brown fox jumps over the lazy dog"
+//  Art  Adj   Adj  Nou  Ver  Pre  Art Adj  Nou
+
+// Fetch all learned parts of speech from csv files
+// nouns.csv
+// verbs.csv
+// adjectives.csv
+// adverbs.csv
+// prepositions.csv
+
+// Open and read/write to file fs
+// fs.open('./engcsv/adjectives.csv', 'r+', function(error, data) {
+//     if (error) {
+//         console.log('Error opening adjectives.csv')
+//         throw error
+//     }
+//     else {
+//         fs.readFile('./engcsv/adjectives.csv', 'utf8', function(error, data) {
+//             if (error) {
+//                 console.log('Error reading adjectives.csv')
+//                 throw error
+//             }
+//             else {
+//                 // Write to file when learning english, read from file when generating quote
+//             }
+//         })
+//     }
+// })
 
 process.on('unhandledRejection', (reason, promise) => {
     console.log('no perms')

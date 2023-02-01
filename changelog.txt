@@ -2,3 +2,8 @@ Alpha 0.9
 
 The beginning
 - Bot statically responds to a command (test)
+
+
+Alpha 0.9.1
+
+Planned logic for learning
