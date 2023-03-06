@@ -24,11 +24,7 @@ const config = require('./config.json')
 
 //  -- Command list goes here later --
 
-// Parts of speech word lists
-// const pronouns = ['i', 'you', 'he', 'she', 'him', 'her', 'it', 'them', 'ours']
-// const conjunctions = ['and', 'but', 'or', 'so', 'yet', 'with']
-// const articles = ['a', 'an', 'the']
-// const interjections = ['ah', 'oop', 'oops', 'wow']
+
 
 // Connect Client
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, 
@@ -58,17 +54,18 @@ client.on('messageCreate', message => {
         // Tag parts of speech using POS-JS
 
         // Input message contents into lex, then tag each word with a part of speech
-        var words = new pos.Lexer().lex(message.content.toLowerCase()) 
-        var tagger = new pos.Tagger()
-        var taggedWords = tagger.tag(words) 
+        let words = new pos.Lexer().lex(message.content.toLowerCase()) 
+        let tagger = new pos.Tagger()
+        let taggedWords = tagger.tag(words) 
 
         let len = message.content.split(' ').length
+        console.log(len)
 
         // For each tagged word, read the CSV for the tag, then add the word to the CSV if word isn't there already
         for (i = 0; i < len; i++) {
-            var taggedWord = taggedWords[i]
-            var word = taggedWord[0]
-            var tag = taggedWord[1]
+            let taggedWord = taggedWords[i]
+            let word = taggedWord[0]
+            let tag = taggedWord[1]
             console.log(`${word} - ${tag}`)
 
             // Remember words that have been tagged
@@ -78,7 +75,7 @@ client.on('messageCreate', message => {
 
                 if (error) {
                     // Create CSV if file not found
-                    fs.writeFile(`./engcsv/${tag}.csv`, word, 'utf8', function(error, data) { // start user with 1 pog
+                    fs.writeFile(`./engcsv/${tag}.csv`, word, 'utf8', function(error, data) { // start file with word
                         null
                     })
                     console.log(`${tag} CSV created.`)
@@ -110,6 +107,7 @@ client.on('messageCreate', message => {
                                     // If word was found in the CSV, do not add word to CSV
                                     sameword = true
                                     console.log('Found same word')
+                                    break
                                 }
                                 else {
                                     null
@@ -122,10 +120,12 @@ client.on('messageCreate', message => {
                                 console.log(word)
 
                                 // Add word to the list of words already present in the CSV
-                                let finalwordlist = contents.push(word)
+                                let finalwordlist = contents.push(`,${word}`)
+                                let finalwordliststr = finalwordlist.toString()
+                                console.log(finalwordliststr)
 
                                 // Overwrite the previous CSV with the updated list
-                                fs.write(fd, finalwordlist, 0,'utf8', function(error, writtenbytes) {
+                                fs.write(fd, finalwordliststr, 0,'utf8', function(error, writtenbytes) {
                                     console.log('Write to CSV')
                                 }) 
                             }
@@ -134,101 +134,6 @@ client.on('messageCreate', message => {
                 }
             })
         }
-        
-
-
-        
-        // let wordcount = 0
-        // let nouns = []
-        // let pronouns = ['i', 'you', 'he', 'she', 'him', 'her', 'it', 'them', 'ours']
-        // let verbs = []
-        // let adjectives = []
-        // let adverbs = []
-        // let prepositions = []
-        // let conjunctions = ['and', 'but', 'or', 'so', 'yet', 'with']
-        // let articles = ['a', 'an', 'the']
-        // let interjections = []
-
-        // for (wordcount = 0; wordcount < words.length; wordcount++) {
-        //     let word = words[wordcount]
-        //     console.log(word)
-        //     // Nouns
-        //     // Person, Place, Thing -> Objects
-
-        //     // Pronouns
-        //     // Replaces a Noun
-
-        //     // Verbs
-        //     // Action
-
-        //     // Adjectives
-        //     // Describes a noun; comes before a noun
-
-        //     // Adverbs
-        //     if (word.endsWith('ly')) {
-        //         console.log('Adv detected')
-        //         fs.open('./engcsv/adverbs.csv', 'r+', function(error, fd) {
-        //             console.log('Open Adv CSV')
-        //             adverbs.push(word)
-        //             words.splice(word)
-        //             console.log(words)
-        //             if (error) {
-        //                 null
-        //             }
-        //             else {
-        //                 fs.readFile('./engcsv/adverbs.csv', 'utf8', function(error, data) {
-        //                     if (error) {
-        //                         null
-        //                     }
-        //                     else {
-        //                         console.log('Reading Adv CSV')
-        //                         let contents = data.split(',')
-        //                         console.log(contents)
-        //                         let advcount = 0
-        //                         let sameword = false
-        //                         for (advcount = 0; advcount < contents.length; advcount++) {
-        //                             let existadv = contents[advcount]
-        //                             console.log(contents.length)
-        //                             if (existadv == word) {
-        //                                 sameword = true
-        //                                 console.log('Found same word')
-        //                             }
-        //                             else {
-        //                                 sameword = false
-        //                             }
-        //                         }
-        //                         if (!sameword) {
-        //                             console.log(word)
-        //                             finaladvlist = word.split(' ')
-        //                             finaladvcount = 0
-        //                             for (finaladvcount = 0; finaladvcount < finaladvlist.length; finaladvcount++) {
-        //                                 finaladv = finaladvlist[finaladvcount]
-        //                                 if (finaladv.endsWith('ly')) {
-        //                                     contents.push(finaladv)
-        //                                     let rewrite = contents.toString()
-        //                                     console.log(rewrite)
-        //                                     fs.write(fd, rewrite, 0,'utf8', function(error, writtenbytes) {
-        //                                         console.log('Write to Adv CSV')
-        //                                     }) 
-        //                                 }
-        //                             }
-        //                         }
-        //                     }
-        //                 })
-        //             }
-        //         })
-        //     }
-
-            // Prepositions
-
-            // Conjunctions
-
-            // Articles
-
-            // Interjections 
-            // Catch all that don't fit in previous categories
-
-//         }
     }
 })
 
