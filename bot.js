@@ -75,7 +75,7 @@ client.on('messageCreate', message => {
 
                 if (error) {
                     // Create CSV if file not found
-                    fs.writeFile(`./engcsv/${tag}.csv`, word, 'utf8', function(error, data) { // start file with word
+                    fs.writeFile(`./engcsv/${tag}.csv`, `${word},`, 'utf8', function(error, data) { // start file with word
                         null
                     })
                     console.log(`${tag} CSV created.`)
@@ -92,8 +92,13 @@ client.on('messageCreate', message => {
 
                             // Split existing data into a list
                             let contents = data.split(',')
-                            console.log('Evalating existing word list')
+                            console.log('Evaluating existing word list')
                             console.log(contents)
+
+                            let index = contents.indexOf('')
+                            if (index > -1) {
+                                contents.splice(index, 1)
+                            }
 
                             let wc = 0
                             let sameword = false
@@ -116,18 +121,24 @@ client.on('messageCreate', message => {
                             }
 
                             // If no same word in CSV, add word to the CSV
-                            if (!sameword) {
+                            if (sameword == false) {
                                 console.log(word)
 
                                 // Add word to the list of words already present in the CSV
-                                let finalwordlist = contents.push(`,${word}`)
-                                let finalwordliststr = finalwordlist.toString()
-                                console.log(finalwordliststr)
+                                if (word == '') {
+                                    null
+                                }
+                                else {
+                                    contents.push(word) // Push new word onto wordlist array
+                                    console.log(contents)
+                                    let finalwordliststr = contents.toString() // Convert array to string
 
-                                // Overwrite the previous CSV with the updated list
-                                fs.write(fd, finalwordliststr, 0,'utf8', function(error, writtenbytes) {
-                                    console.log('Write to CSV')
-                                }) 
+
+                                    // Overwrite the previous CSV with the updated list
+                                    fs.write(fd, finalwordliststr, 0,'utf8', function(error, writtenbytes) {
+                                        console.log(`Write to CSV = ${finalwordliststr}`)
+                                    }) 
+                                }
                             }
                         }
                     })
