@@ -46,7 +46,7 @@ client.on('messageCreate', message => {
         return // prevent bot from responding to own messages
     }
     if (message.content.toLowerCase() == 'test') { // Test command to make sure the bot responds
-        console.log('Command Activated')
+        // console.log('Command Activated')
         message.channel.send('Passed')
     }
     if (message.content.toLowerCase() == 'gen quote') { // Message generator
