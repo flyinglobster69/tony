@@ -24,7 +24,7 @@ const config = require('./config.json')
 
 // Initialize some variables
 let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
-let finalMessage = ''
+let randomMessage = []
 
 
 // Connect Client
@@ -51,7 +51,7 @@ client.on('messageCreate', message => {
     }
     if (message.content.toLowerCase() == 'gen quote') { // Message generator
         
-        asyncLoop(10, function(loop) {
+        asyncLoop(wordType.length, function(loop) {
             someFunction(1, 2, function(result) {
         
                 // log the iteration
@@ -103,8 +103,7 @@ client.on('messageCreate', message => {
         // let finalMessage = randomMessage.toString()
 
         // When all words are chosen, randomMessage converted to string and then sent in chat
-        console.log(randomMessage)
-        finalMessage = randomMessage.toString()
+        let finalMessage = randomMessage.toString()
         console.log(finalMessage)
 
         message.channel.send(finalMessage)
@@ -386,12 +385,14 @@ function someFunction(a, b, callback) {
     console.log(randomMessage)
     finalMessage = randomMessage.toString()
     console.log(finalMessage)
+
     callback()
 }
 
 // When the bot is missing permissions 
-process.on('unhandledRejection', (reason, promise) => {
-    console.log('no perms')
-})
+// process.on('unhandledRejection', (reason, promise) => {
+//     console.log('no perms')
+// })
+process.on("unhandledRejection", error => console.error("Promise rejection:", error))
 
 client.login(config.token)
