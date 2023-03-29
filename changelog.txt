@@ -27,3 +27,7 @@ CBT 1.0
 - Mostly functional language memory function
 - Fully functional language recognition and sorting function
 - Need time to saturate wordbanks before quote generation is possible
+
+CBT 1.1
+
+- Random quote generator with limited sentence length and style variability

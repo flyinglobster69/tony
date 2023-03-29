@@ -22,8 +22,9 @@ const pos = require('pos')
 // Connect Config file 
 const config = require('./config.json')
 
-//  -- Command list goes here later --
-
+// Initialize some variables
+let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
+let finalMessage = ''
 
 
 // Connect Client
@@ -48,6 +49,66 @@ client.on('messageCreate', message => {
         console.log('Command Activated')
         message.channel.send('Passed')
     }
+    if (message.content.toLowerCase() == 'gen quote') { // Message generator
+        
+        asyncLoop(10, function(loop) {
+            someFunction(1, 2, function(result) {
+        
+                // log the iteration
+                console.log(loop.iteration())
+        
+                // Okay, for cycle could continue
+                loop.next()
+            })},
+            function(){console.log('cycle ended')}
+        )
+        // console.log('Message to generate')
+        // // Sentence structures
+        // // DT JJ NN VBD VBN 
+        // let randomMessage = []
+        // let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
+
+        // // For each word type, open the CSV file and choose a random word
+        // for (t = 0; t < wordType.length; t++) {
+        //     let type = wordType[t]
+        //     fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
+        //         console.log(`${type}.csv opened`)
+        //         if (error) {
+        //             console.log(`Failed to open ${type}.csv`)
+        //         }
+        //         else {
+        //             fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
+        //                 if (error) {
+        //                     console.log(`Failed to read ${type}.csv`)
+        //                 }
+        //                 else {
+        //                     console.log(`Successful read for ${type}.csv`)
+        //                     let contents = data.split(',')
+        //                     console.log(contents)
+        //                     let randomWordNum = Math.floor(Math.random() * contents.length)
+        //                     console.log(randomWordNum)
+        //                     let randomWord = contents[randomWordNum]
+        //                     console.log(contents[randomWordNum])
+
+        //                     // Add randomWord to randomMessage
+        //                     randomMessage.push(randomWord)
+        //                 }
+        //             })
+        //         }
+        //     })
+        // }
+
+        // // When all words are chosen, randomMessage converted to string and then sent in chat
+        // console.log(randomMessage)
+        // let finalMessage = randomMessage.toString()
+
+        // When all words are chosen, randomMessage converted to string and then sent in chat
+        console.log(randomMessage)
+        finalMessage = randomMessage.toString()
+        console.log(finalMessage)
+
+        message.channel.send(finalMessage)
+    }
 
     
     else {
@@ -59,26 +120,26 @@ client.on('messageCreate', message => {
         let taggedWords = tagger.tag(words) 
 
         let len = message.content.split(' ').length
-        console.log(len)
+        // console.log(len)
 
         // For each tagged word, read the CSV for the tag, then add the word to the CSV if word isn't there already
         for (i = 0; i < len; i++) {
             let taggedWord = taggedWords[i]
             let word = taggedWord[0]
             let tag = taggedWord[1]
-            console.log(`${word} - ${tag}`)
+            // console.log(`${word} - ${tag}`)
 
             // Remember words that have been tagged
             fs.open(`./engcsv/${tag}.csv`, 'r+', function(error, fd) {
-                console.log('Open CSV')
-                console.log(word)
+                // console.log('Open CSV')
+                // console.log(word)
 
                 if (error) {
                     // Create CSV if file not found
                     fs.writeFile(`./engcsv/${tag}.csv`, `${word},`, 'utf8', function(error, data) { // start file with word
                         null
                     })
-                    console.log(`${tag} CSV created.`)
+                    // console.log(`${tag} CSV created.`)
                 }
                 else {
                     // Read data from CSV and then add new word to it if needed
@@ -88,12 +149,12 @@ client.on('messageCreate', message => {
                             // No Read error should occur if file exists
                         }
                         else {
-                            console.log('Reading CSV')
+                            // console.log('Reading CSV')
 
                             // Split existing data into a list
                             let contents = data.split(',')
-                            console.log('Evaluating existing word list')
-                            console.log(contents)
+                            // console.log('Evaluating existing word list')
+                            // console.log(contents)
 
                             let index = contents.indexOf('')
                             if (index > -1) {
@@ -106,12 +167,12 @@ client.on('messageCreate', message => {
                             // Compare each existing word with the word that was collected
                             for (wc = 0; wc < contents.length; wc++) {
                                 let existword = contents[wc]
-                                console.log(contents.length)
+                                // console.log(contents.length)
 
                                 if (existword == word) {
                                     // If word was found in the CSV, do not add word to CSV
                                     sameword = true
-                                    console.log('Found same word')
+                                    // console.log('Found same word')
                                     break
                                 }
                                 else {
@@ -122,7 +183,7 @@ client.on('messageCreate', message => {
 
                             // If no same word in CSV, add word to the CSV
                             if (sameword == false) {
-                                console.log(word)
+                                // console.log(word)
 
                                 // Add word to the list of words already present in the CSV
                                 if (word == '') {
@@ -130,13 +191,13 @@ client.on('messageCreate', message => {
                                 }
                                 else {
                                     contents.push(word) // Push new word onto wordlist array
-                                    console.log(contents)
+                                    // console.log(contents)
                                     let finalwordliststr = contents.toString() // Convert array to string
 
 
                                     // Overwrite the previous CSV with the updated list
                                     fs.write(fd, finalwordliststr, 0,'utf8', function(error, writtenbytes) {
-                                        console.log(`Write to CSV = ${finalwordliststr}`)
+                                        // console.log(`Write to CSV = ${finalwordliststr}`)
                                     }) 
                                 }
                             }
@@ -204,6 +265,129 @@ client.on('messageCreate', message => {
 //     }
 // })
 
+// function someFunction(a, b, callback) {
+//     console.log('Hey doing some stuff!')
+//     callback()
+// }
+
+// asyncLoop(10, function(loop) {
+//     someFunction(1, 2, function(result) {
+
+//         // log the iteration
+//         console.log(loop.iteration())
+
+//         // Okay, for cycle could continue
+//         loop.next()
+//     })},
+//     function(){console.log('cycle ended')}
+// )
+
+// function asyncLoop(iterations, func, callback) {
+//     var index = 0
+//     var done = false
+//     var loop = {
+//         next: function() {
+//             if (done) {
+//                 return
+//             }
+
+//             if (index < iterations) {
+//                 index++
+//                 func(loop)
+
+//             } else {
+//                 done = true
+//                 callback()
+//             }
+//         },
+
+//         iteration: function() {
+//             return index - 1
+//         },
+
+//         break: function() {
+//             done = true
+//             callback()
+//         }
+//     }
+//     loop.next()
+//     return loop
+// }
+
+function asyncLoop(iterations, func, callback) {
+    var index = wordType.length
+    var done = false
+    var loop = {
+        next: function() {
+            if (done) {
+                return
+            }
+
+            if (index < iterations) {
+                index++
+                func(loop)
+
+            } else {
+                done = true
+                callback()
+            }
+        },
+
+        iteration: function() {
+            return index - 1
+        },
+
+        break: function() {
+            done = true
+            callback()
+        }
+    }
+    loop.next()
+    return loop
+}
+
+function someFunction(a, b, callback) {
+    console.log('Message to generate')
+    // Sentence structures
+    // DT JJ NN VBD VBN 
+    let randomMessage = []
+
+    // For each word type, open the CSV file and choose a random word
+    for (t = 0; t < wordType.length; t++) {
+        let type = wordType[t]
+        fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
+            console.log(`${type}.csv opened`)
+            if (error) {
+                console.log(`Failed to open ${type}.csv`)
+            }
+            else {
+                fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
+                    if (error) {
+                        console.log(`Failed to read ${type}.csv`)
+                    }
+                    else {
+                        console.log(`Successful read for ${type}.csv`)
+                        let contents = data.split(',')
+                        console.log(contents)
+                        let randomWordNum = Math.floor(Math.random() * contents.length)
+                        console.log(randomWordNum)
+                        let randomWord = contents[randomWordNum]
+                        console.log(contents[randomWordNum])
+
+                        // Add randomWord to randomMessage
+                        randomMessage.push(randomWord)
+                    }
+                })
+            }
+        })
+    }
+
+    // When all words are chosen, randomMessage converted to string and then sent in chat
+    console.log(randomMessage)
+    finalMessage = randomMessage.toString()
+    console.log(finalMessage)
+    callback()
+}
 
 // When the bot is missing permissions 
 process.on('unhandledRejection', (reason, promise) => {
