@@ -18,6 +18,7 @@ const Discord = require('discord.js')
 const fs = require('fs')
 const { exitCode } = require('process')
 const pos = require('pos')
+const util = require('util')
 
 // Connect Config file 
 const config = require('./config.json')
@@ -51,62 +52,74 @@ client.on('messageCreate', message => {
     }
     if (message.content.toLowerCase() == 'gen quote') { // Message generator
         
-        asyncLoop(wordType.length, function(loop) {
-            someFunction(1, 2, function(result) {
+        // asyncLoop(wordType.length, function(loop) {
+        //     someFunction(1, 2, function(result) {
         
-                // log the iteration
-                console.log(loop.iteration())
+        //         // log the iteration
+        //         console.log(loop.iteration())
         
-                // Okay, for cycle could continue
-                loop.next()
-            })},
-            function(){console.log('cycle ended')}
-        )
-        // console.log('Message to generate')
-        // // Sentence structures
-        // // DT JJ NN VBD VBN 
-        // let randomMessage = []
-        // let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
+        //         // Okay, for cycle could continue
+        //         loop.next()
+        //     })},
+        //     function(){console.log('cycle ended')}
+        // )
+        console.log('Message to generate')
+        // Sentence structures
+        // DT JJ NN VBD VBN 
+        let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
+        let randomMessage = ['']
+        let t = 0
+        let cycleCount = 0
 
-        // // For each word type, open the CSV file and choose a random word
-        // for (t = 0; t < wordType.length; t++) {
-        //     let type = wordType[t]
-        //     fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
-        //         console.log(`${type}.csv opened`)
-        //         if (error) {
-        //             console.log(`Failed to open ${type}.csv`)
-        //         }
-        //         else {
-        //             fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
-        //                 if (error) {
-        //                     console.log(`Failed to read ${type}.csv`)
-        //                 }
-        //                 else {
-        //                     console.log(`Successful read for ${type}.csv`)
-        //                     let contents = data.split(',')
-        //                     console.log(contents)
-        //                     let randomWordNum = Math.floor(Math.random() * contents.length)
-        //                     console.log(randomWordNum)
-        //                     let randomWord = contents[randomWordNum]
-        //                     console.log(contents[randomWordNum])
+        // For each word type, open the CSV file and choose a random word
+        for (t = 0; t < wordType.length; t++) {
+            let type = wordType[t]
+            fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
+                console.log(`${type}.csv opened`)
+                if (error) {
+                    console.log(`Failed to open ${type}.csv`)
+                }
+                else {
+                    fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
+                        if (error) {
+                            console.log(`Failed to read ${type}.csv`)
+                        }
+                        else {
+                            console.log(`Successful read for ${type}.csv`)
+                            let contents = data.split(',')
+                            console.log(contents)
+                            let randomWordNum = Math.floor(Math.random() * contents.length)
+                            console.log(randomWordNum)
+                            let randomWord = contents[randomWordNum]
+                            console.log(contents[randomWordNum])
 
-        //                     // Add randomWord to randomMessage
-        //                     randomMessage.push(randomWord)
-        //                 }
-        //             })
-        //         }
-        //     })
-        // }
+                            // Add randomWord to randomMessage
+                            randomMessage.push(randomWord)
+                        }
+                    })
+                }
+            })
+        }
+        
 
         // // When all words are chosen, randomMessage converted to string and then sent in chat
         // console.log(randomMessage)
         // let finalMessage = randomMessage.toString()
 
         // When all words are chosen, randomMessage converted to string and then sent in chat
-        let finalMessage = randomMessage.toString()
-        console.log(finalMessage)
+        while (cycleCount != wordType.length){
+            null
+        }
+        if (cycleCount == wordType.length) {
+            let finalMessage = randomMessage.toString()
+            console.log(finalMessage)
+            console.log('Message to send')
 
-        message.channel.send(finalMessage)
+            message.channel.send(randomMessage.toString())
+        }
+        else {
+            null
+        }
     }
 
     
