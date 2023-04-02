@@ -52,7 +52,7 @@ client.on('messageCreate', message => {
         // DT JJ NN VBD VBN 
         let wordTypeList1 = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
         let wordTypeList2 = ['PRP', 'VBP', 'JJ', 'RB', 'RB', 'VBD']
-        let wordTypeList3 = ['UH']
+        let wordTypeList3 = ['UH', 'NN']
         let wordTypeList4 = ['DT', 'JJ', 'JJ', 'NN', 'VBP', 'JJR', 'NNS']
         let wordTypeList5 = ['VB', 'TO', 'VB', 'DT', 'JJ', 'NN']
         let wordTypeList6 = ['PRP', 'VBD', 'IN', 'DT', 'JJS', 'NNS']
@@ -101,8 +101,8 @@ client.on('messageCreate', message => {
         send = setTimeout(sendMessage, 1000)
 
         function sendMessage() {
-            let b = randomMessage
-            message.channel.send(`${b[1]} ${b[2]} ${b[3]} ${b[4]} ${b[5]}`)
+            let b = randomMessage.toString().replaceAll(',', ' ')
+            message.channel.send(b)
         }
     }
 
