@@ -31,3 +31,13 @@ CBT 1.0
 CBT 1.1
 
 - Random quote generator with limited sentence length and style variability
+
+
+Release 1.0
+
+- Random quote generator with limited variation in sentence length and style
+- Still has some minor quote generation issues
+
+Release 1.0.1
+
+- Reworks the comma replacement system in generating quotes. Undefined values should be gone now.
