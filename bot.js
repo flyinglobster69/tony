@@ -23,10 +23,6 @@ const util = require('util')
 // Connect Config file 
 const config = require('./config.json')
 
-// Initialize some variables
-let wordType = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
-let randomMessage = []
-
 
 // Connect Client
 const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, 
@@ -42,6 +38,7 @@ client.on('ready', () => {
 })
 
 client.on('messageCreate', message => {
+
     console.log('Message Detected')
     if (message.author == client.user) {
         return // prevent bot from responding to own messages
@@ -51,6 +48,7 @@ client.on('messageCreate', message => {
         message.channel.send('Passed')
     }
     if (message.content.toLowerCase() == 'gen quote') { // Message generator
+<<<<<<< HEAD
         
         // asyncLoop(wordType.length, function(loop) {
         //     someFunction(1, 2, function(result) {
@@ -119,6 +117,63 @@ client.on('messageCreate', message => {
         }
         else {
             null
+=======
+        // Sentence structures
+        // DT JJ NN VBD VBN 
+        let wordTypeList1 = ['DT', 'JJ', 'NN', 'VBD', 'VBN']
+        let wordTypeList2 = ['PRP', 'VBP', 'JJ', 'RB', 'RB', 'VBD']
+        let wordTypeList3 = ['UH', 'NN']
+        let wordTypeList4 = ['DT', 'JJ', 'JJ', 'NN', 'VBP', 'JJR', 'NNS']
+        let wordTypeList5 = ['VB', 'TO', 'VB', 'DT', 'JJ', 'NN']
+        let wordTypeList6 = ['PRP', 'VBD', 'IN', 'DT', 'JJS', 'NNS']
+        let sentenceList = [wordTypeList1, wordTypeList2, wordTypeList3, wordTypeList4, wordTypeList5, wordTypeList6]
+        let randomMessage = ['']
+        let t = 0
+
+        // Choose a random sentence type
+        let randomSentenceNum = Math.floor(Math.random() * sentenceList.length)
+        let randomSentence = sentenceList[randomSentenceNum]
+
+        // For each word type, open the CSV file and choose a random word
+        for (t = 0; t < randomSentence.length + 1; t++) {
+            let type = randomSentence[t]
+            fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
+                // console.log(`${type}.csv opened`)
+                if (error) {
+                    // console.log(`Failed to open ${type}.csv`)
+                }
+                else {
+                    fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
+                        if (error) {
+                            // console.log(`Failed to read ${type}.csv`)
+                        }
+                        else {
+                            console.log(`Successful read for ${type}.csv`)
+                            let contents = data.split(',')
+                            // console.log(contents)
+                            let randomWordNum = Math.floor(Math.random() * contents.length)
+                            // console.log(randomWordNum)
+                            let randomWord = contents[randomWordNum]
+                            // console.log(contents[randomWordNum])
+
+                            // Add randomWord to randomMessage
+                            randomMessage.push(randomWord)
+                            // console.log(randomMessage)
+                        }
+                    })
+                }
+            })
+        }
+
+        var send
+
+        // console.log('Message to generate')
+        send = setTimeout(sendMessage, 1000)
+
+        function sendMessage() {
+            let b = randomMessage.toString().replaceAll(',', ' ')
+            message.channel.send(b)
+>>>>>>> 0e7a605f26f6f7bc4daff70e2262a69cb9d228a3
         }
     }
 
@@ -277,130 +332,7 @@ client.on('messageCreate', message => {
 //     }
 // })
 
-// function someFunction(a, b, callback) {
-//     console.log('Hey doing some stuff!')
-//     callback()
-// }
 
-// asyncLoop(10, function(loop) {
-//     someFunction(1, 2, function(result) {
-
-//         // log the iteration
-//         console.log(loop.iteration())
-
-//         // Okay, for cycle could continue
-//         loop.next()
-//     })},
-//     function(){console.log('cycle ended')}
-// )
-
-// function asyncLoop(iterations, func, callback) {
-//     var index = 0
-//     var done = false
-//     var loop = {
-//         next: function() {
-//             if (done) {
-//                 return
-//             }
-
-//             if (index < iterations) {
-//                 index++
-//                 func(loop)
-
-//             } else {
-//                 done = true
-//                 callback()
-//             }
-//         },
-
-//         iteration: function() {
-//             return index - 1
-//         },
-
-//         break: function() {
-//             done = true
-//             callback()
-//         }
-//     }
-//     loop.next()
-//     return loop
-// }
-
-function asyncLoop(iterations, func, callback) {
-    var index = wordType.length
-    var done = false
-    var loop = {
-        next: function() {
-            if (done) {
-                return
-            }
-
-            if (index < iterations) {
-                index++
-                func(loop)
-
-            } else {
-                done = true
-                callback()
-            }
-        },
-
-        iteration: function() {
-            return index - 1
-        },
-
-        break: function() {
-            done = true
-            callback()
-        }
-    }
-    loop.next()
-    return loop
-}
-
-function someFunction(a, b, callback) {
-    console.log('Message to generate')
-    // Sentence structures
-    // DT JJ NN VBD VBN 
-    let randomMessage = []
-
-    // For each word type, open the CSV file and choose a random word
-    for (t = 0; t < wordType.length; t++) {
-        let type = wordType[t]
-        fs.open(`./engcsv/${type}.csv`, 'r+', function(error, fd) {
-            console.log(`${type}.csv opened`)
-            if (error) {
-                console.log(`Failed to open ${type}.csv`)
-            }
-            else {
-                fs.readFile(`./engcsv/${type}.csv`, 'utf8', function(error, data) {
-                    if (error) {
-                        console.log(`Failed to read ${type}.csv`)
-                    }
-                    else {
-                        console.log(`Successful read for ${type}.csv`)
-                        let contents = data.split(',')
-                        console.log(contents)
-                        let randomWordNum = Math.floor(Math.random() * contents.length)
-                        console.log(randomWordNum)
-                        let randomWord = contents[randomWordNum]
-                        console.log(contents[randomWordNum])
-
-                        // Add randomWord to randomMessage
-                        randomMessage.push(randomWord)
-                    }
-                })
-            }
-        })
-    }
-
-    // When all words are chosen, randomMessage converted to string and then sent in chat
-    console.log(randomMessage)
-    finalMessage = randomMessage.toString()
-    console.log(finalMessage)
-
-    callback()
-}
 
 // When the bot is missing permissions 
 // process.on('unhandledRejection', (reason, promise) => {
